@@ -6,7 +6,7 @@ The port scanner written in python | **5 min** to scan all 65355 ports.
 ```
 > git clone https://github.com/FelipeIzolan/pyscan.git
 > cd ./pyscan
-> https://github.com/FelipeIzolan/pyscan.git
+> pip install -r requirements.txt
 > python main.py
 ```
 ```
