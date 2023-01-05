@@ -11,7 +11,7 @@ print("""
 ..................
 """)
 
-PROCESS = 25 
+PROCESS = 25
 IP = input("Insert IP: ")
 MAX = input("Insert max-range (default: 65535): ") or 65535 
 MAX = int(MAX)
@@ -19,7 +19,15 @@ MAX = int(MAX)
 progress = tqdm(total=MAX, ncols=55, colour="cyan", bar_format="| {bar} | {percentage:3.0f}% | {elapsed} |")
 pp = int(MAX / PROCESS)
 
+THREADs = []
 PORTs = []
+
+def every(arr, value):
+    for item in arr:
+        if item != value:
+            return False
+
+    return True
 
 def check(IP, PORT):
     s = socket.socket()
@@ -30,15 +38,16 @@ def check(IP, PORT):
     if c == 0: return True
     else: return False 
 
-def thread(start, end, IP, id):
+def thread(start, end, IP, index):
     for PORT in range(start, end):
         progress.update(1)
         if check(IP, PORT): PORTs.append("[🟢] {}:{}".format(IP, PORT))
         # else: PORTs.append("[🔴] {}:{}".format(IP, PORT))
-    
-    if id == 4:
+   
+    THREADs[index] = True
+    if every(THREADs, True):
         progress.close()
-        print("\n".join(PORTs)) 
+        print("\n".join(PORTs))
 
 for i in range(PROCESS):
     start = i * pp
@@ -47,5 +56,7 @@ for i in range(PROCESS):
     if PROCESS == i + 1:
         end = end + (MAX - end)
 
-    tr = Thread(target=thread, args=(start, end, IP, i + 1))
+    tr = Thread(target=thread, args=(start, end, IP, i))
+    THREADs.append(False)
     tr.start()
+
